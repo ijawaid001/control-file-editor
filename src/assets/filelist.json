@@ -1,0 +1,326 @@
+[
+    {"Fileroot": "DIM_ENTITY",
+        "Action" : "DIM",
+        "Schema": ["EntityID", "EntityCode", "EntityName" ,"EntityGroup1","EntityGroup2","EntityGroup3","EntityGroup4","AcquisitionDate" 
+					,"DisposalDate","InternalCurrency" ,"GroupCurrency", "FinancialYearEndDate","GroupFinancialYearEndDate" 
+					,"ParentCompany" ,"OwnershipPct" ,"MultipleOwnersFlag","EntityRegionID"],
+        "DataType": ["object", "object", "object" ,"object","object","object","object","int32" 
+					,"int32","object" ,"object", "int32","int32" 
+					,"object" ,"float64" ,"int32","object"],
+        "Table" : "DIM_ENTITY",
+        "Primary_Key" : "EntityID",
+        "Hash_Keys" : ["EntityName","GroupCurrency","GroupFinancialYearEndDate"]
+    },
+    {"Fileroot": "DIM_SITE",
+        "Action" : "DIM",
+        "Schema": ["SiteID" ,"SiteName","SiteAddress" ,"SiteChannel", "SiteRegionID", "SiteStartDate", "SiteCloseDate", "SiteStatus", "SiteClassification1"
+					,"SiteClassification2","SiteClassification3","SiteClassification4","SiteLocationType", "IncludeSiteFlag", "SiteSize"],
+        "DataType": ["object" ,"object","object" ,"object", "object", "int32", "int32", "object", "object"
+					,"object","object","object","object", "int32", "int32"],
+        "Table" : "DIM_SITE",
+        "Primary_Key" : "SiteID",
+        "Hash_Keys" : ["SiteName","SiteRegionID"]
+    },
+    { "Fileroot": "DIM_COA",
+        "Action" : "DIM",
+        "Schema": ["COAID","EntityID", "GLAccountNumber", "GLDescription", "Multiplier", "ClientCOAMapping", "ClientCOAGroup7", "IncludeFlag", "IntercompanyCodeFlag"],
+        "DataType": ["object","object", "object", "object", "int32", "object", "object", "int32", "int32"],
+        "Table" : "DIM_COA",
+        "Primary_Key" : "COAID",
+        "Hash_Keys" : ["EntityID","ClientCOAMapping"]
+    },
+    { "Fileroot": "DIM_MAPPINGCOA",
+        "Action" : "OVERWRITE",
+        "Schema": ["COAGroup1","COAGroup2","COAGroup3","COAGroup4","COAGroup5","COAGroup6","COAGroup7","ClientCOAGroup1","ClientCOAGroup2","ClientCOAGroup3","ClientCOAGroup4","ClientCOAGroup5","ClientCOAGroup6","ClientCOAGroup7"],
+		"DataType": ["object","object","object","object","object","object","object","object","object","object","object","object","object","object"],
+        "Table" : "DIM_MAPPINGCOA",
+        "Primary_Key" : "ClientCOAGroup7",
+        "Hash_Keys" : ["COAGroup1","COAGroup2","COAGroup3","COAGroup4","COAGroup5","COAGroup6"]
+    },
+    { "Fileroot": "DIM_REGION",
+        "Action" : "DIM",
+        "Schema": ["RegionID", "CountryCode" ,"Country" ,"Continent" ,"Geolocation", "RegionMapping1" ,"RegionMapping2" ,"RegionMapping3",
+                    "RegionMapping4" ,"Market"],
+        "DataType": ["object", "object" ,"object" ,"object" ,"object", "object" ,"object" ,"object",
+                    "object" ,"object"],
+        "Table" : "DIM_REGION",
+        "Primary_Key" : "RegionID",
+        "Hash_Keys" : ["Market","Country","Continent"]
+    },
+    { "Fileroot": "DIM_CUSTOMER",
+        "Action" : "DIM",
+        "Schema": ["CustomerID" ,"CustomerName", "UltimateParent", "CustomerAddress" ,"CustomerStartDate" ,"CustomerLeaveDate"
+                    ,"CustomerRegionID" ,"CustomerChannel" ,"CustomerEndMarket","CustomerIndustry" ,"CustomerGroup1" ,"CustomerGroup2" ,"CustomerGroup3"
+                    ,"CustomerGroup4" ,"CustomerGroup5" ,"CustomerGroup6" ,"CustomerGroup7" ,"CustomerLeaveReason" ,"IntercompanyFlag"],
+        "DataType": ["object" ,"object", "object", "object" ,"int32" ,"int32"
+                    ,"object" ,"object" ,"object","object" ,"object" ,"object" ,"object"
+                    ,"object" ,"object" ,"object" ,"object" ,"object" ,"int32"],
+        "Table" : "DIM_CUSTOMER",
+        "Primary_Key" : "CustomerID",
+        "Hash_Keys" : ["CustomerName","CustomerAddress"]
+    },
+    { "Fileroot": "DIM_PRODUCT",
+        "Action" : "DIM",
+        "Schema": ["ProductID", "SKU", "ProductName", "ProductCategory", "ProductGroup1", "ProductGroup2", "ProductGroup3",
+                    "ProductGroup4","ProductGroup5","ProductGroup6","ProductAttribute1","ProductAttribute2","ProductAttribute3"],
+        "DataType": ["object", "object", "object", "object", "object", "object", "object",
+                    "object","object","object","object","object","object"],
+        "Table" : "DIM_PRODUCT",
+        "Primary_Key" : "ProductID",
+        "Hash_Keys" : ["ProductName","ProductCategory"]
+    },
+    { "Fileroot": "DIM_FX_RATE",
+        "Action" : "OVERWRITE",
+        "Schema": ["SourceCurrency", "TargetCurrency", "FXDate", "ExchangeRate", "ConstantRate", "BudgetExchangeRate",
+                    "MonthlyExchangeratePL", "SourceCurrency_FXDate"],
+        "DataType": ["object", "object", "int32", "float64", "float64", "float64",
+                    "float64","object"],
+        "Table" : "DIM_FX_RATE",
+        "Primary_Key" : "SourceCurrency_FXDate",
+        "Hash_Keys" : [""]
+    },
+   { "Fileroot": "DIM_CALENDAR",
+        "Action" : "OVERWRITE",
+        "Schema": ["CalendarDate", "WeekDayName", "WeekOfYear", "Month", "MonthName", "Year","Year_Month",
+                    "MMYYYY","MonthYear","LastDayofWeek","WeekEnding","LastDayOfMonth","Date_Key"],
+        "DataType": ["object", "object", "int32", "int32", "object", "int32","object",
+                    "int32","object","object","object","object","int32"],
+        "Table" : "DIM_CALENDAR",
+        "Primary_Key" : "",
+        "Hash_Keys" : [""]
+    },
+	{ "Fileroot": "DIM_SALESTEAM",
+        "Action" : "DIM",
+        "Schema": ["SalesPersonID", "SalesTeam1", "SalesTeam2", "SalesTeam3", "SalesTeam4", "SalesTeam5",
+                    "SalesRegionID"],
+        "DataType": ["object", "object", "object", "object", "object", "object",
+                    "object"],
+        "Table" : "DIM_SALESTEAM",
+        "Primary_Key" : "SalesPersonID",
+        "Hash_Keys" : ["SalesTeam1","SalesTeam2","SalesTeam3","SalesTeam4"]
+    },
+	{ "Fileroot": "DIM_CONTRACT",
+        "Action" : "DIM",
+        "Schema": ["ContractID", "ContractDescription", "ContractStartDate", "ContractEndDate", "ContractTerm",
+                    "ContractStatus","DateofLastRenewal","TotalContractValue"],
+        "DataType": ["object", "object", "int32", "int32", "int32",
+                    "object","int32","float64"],
+        "Table" : "DIM_CONTRACT",
+        "Primary_Key" : "ContractID",
+        "Hash_Keys" : ["ContractDescription","ContractStartDate","ContractEndDate","ContractStatus","DateofLastRenewal","TotalContractValue"]
+    },
+	{ "Fileroot": "DIM_BUSINESSUNIT",
+        "Action" : "DIM",
+        "Schema": ["BusinessUnitID", "BusinessUnitName", "BusinessUnitGroup1", "BusinessUnitGroup2", "BusinessUnitGroup3", "BusinessUnitGroup4",
+                    "BusinessUnitInternalCurrency","BusinessUnitRegionID"],
+        "DataType": ["object", "object", "object", "object", "object", "object",
+                    "object","object"],
+        "Table" : "DIM_BUSINESSUNIT",
+        "Primary_Key" : "BusinessUnitID",
+        "Hash_Keys" : ["BusinessUnitName","BusinessUnitGroup4","BusinessUnitRegionID"]
+    },
+	{ "Fileroot": "DIM_MARKET",
+        "Action" : "DIM",
+        "Schema": ["MarketID", "MarketName", "MarketGroup1", "MarketGroup2", "MarketGroup3", "MarketGroup4",
+                    "MarketInternalCurrency","MarketRegionID"],
+        "DataType": ["object", "object", "object", "object", "object", "object",
+                    "object","object"],
+        "Table" : "DIM_MARKET",
+        "Primary_Key" : "MarketID",
+        "Hash_Keys" : ["MarketName","MarketGroup4","MarketRegionID"]
+    },
+	{ "Fileroot": "DIM_PROFITCENTRE",
+        "Action" : "DIM",
+        "Schema": ["ProfitCentreID", "ProfitCentreName", "ProfitCentreGroup1", "ProfitCentreGroup2", "ProfitCentreGroup3", "ProfitCentreGroup4",
+                    "ProfitCentreInternalCurrency","ProfitCentreRegionID"],
+        "DataType": ["object", "object", "object", "object", "object", "object",
+                    "object","object"],
+        "Table" : "DIM_PROFITCENTRE",
+        "Primary_Key" : "ProfitCentreID",
+        "Hash_Keys" : ["ProfitCentreName","ProfitCentreGroup4","ProfitCentreRegionID"]
+    },
+	{ "Fileroot": "DIM_COSTCENTRE",
+        "Action" : "DIM",
+        "Schema": ["CostCentreID", "CostCentreName", "CostCentreGroup1", "CostCentreGroup2", "CostCentreGroup3", "CostCentreGroup4",
+                    "CostCentreCurrency","CostCentreRegionID"],
+        "DataType": ["object", "object", "object", "object", "object", "object",
+                    "object","object"],
+        "Table" : "DIM_COSTCENTRE",
+        "Primary_Key" : "CostCentreID",
+        "Hash_Keys" : ["CostCentreName","CostCentreGroup4","CostCentreRegionID"]
+    },
+	{ "Fileroot": "DIM_PROJECT",
+        "Action" : "DIM",
+        "Schema": ["ProjectID", "ProjectName", "ProjectStartDate", "ProjectEndDate", "ProjectRecovery"],
+        "DataType": ["object", "object", "int32", "int32", "object"],
+        "Table" : "DIM_PROJECT",
+        "Primary_Key" : "ProjectID",
+        "Hash_Keys" : ["ProjectName","ProjectEndDate","ProjectRecovery"]
+    },
+	{ "Fileroot": "DIM_SUPPLIER",
+        "Action" : "DIM",
+		"Schema": ["SupplierID", "SupplierName", "SupplierUltimateParent", "SupplierAddress", "SupplierStartDate", "SupplierLeaveDate",
+		"SupplierRegionID", "SupplierChannel", "SupplierEndMarket", "SupplierIndustry", "SupplierLeaveReason", "SupplierGroup1", "SupplierGroup2",
+		"SupplierGroup3", "SupplierGroup4", "SupplierGroup5", "SupplierGroup6", "SupplierGroup7", "SupplierCPIScore", "SupplierVATNumber", "Supplier TaxJurisdiction"],
+        "DataType": ["object", "object", "object", "object", "int32", "int32", "object", "object", "object", "object", "object", "object", "object", "object",
+		"object", "object", "object", "object", "object", "object", "object"],
+        "Table" : "DIM_SUPPLIER",
+        "Primary_Key" : "SupplierID",
+        "Hash_Keys" : ["SupplierName","SupplierLeaveDate","SupplierRegionID"]
+    },
+	{ "Fileroot": "DIM_PORTCOFUND",
+        "Action" : "DIM",
+		"Schema": ["PortcoFundID","PortcoID", "PortcoName", "FundID", "FundName", "OwnershipPct", "AcquisitionDate", "DisposalDate", "InvestmentValue", "RealisedValue",
+		"ManagementRegion", "FundCapitalisation"],
+        "DataType": ["object","object", "object", "object", "float64", "int32", "int32", "float64", "float64", "object", "object"],
+        "Table" : "DIM_PORTCOFUND",
+        "Primary_Key" : "PortcoFundID",
+        "Hash_Keys" : ["PortcoName","DisposalDate","FundID"]
+    },
+	{ "Fileroot": "DIM_PORTCO",
+        "Action" : "DIM",
+		"Schema": ["PortcoID", "PortcoName", "PEHouseOwnershipPct", "HeadQuarters", "CompanyAddress", "StartOfFinancialYear", "NumberOfEmployee*", "PortcoIndustryName",
+		"PortcoIndustryGroup1", "PortcoIndustryGroup2", "PortcoIndustryGroup3", "PortcoIndustryGroup4", "PortcoRegionID"],
+        "DataType": ["object","object", "float64", "object", "object", "int32", "int32", "object", "object", "object", "object", "object", "object"],
+        "Table" : "DIM_PORTCO",
+        "Primary_Key" : "PortcoID",
+        "Hash_Keys" : ["PEHouseOwnershipPct","StartOfFinancialYear","CompanyAddress"]
+    },
+	{ "Fileroot": "DIM_DEBT",
+        "Action" : "DIM",
+		"Schema": ["DebtID", "RepaymentDate", "MaturityDate", "InstrumentType", "Covenants", "Coverage", "InterestCover", "Class", "SecuredFlag", "SeniorLienFlag",
+		"TestValue", "TestResult"],
+        "DataType": ["object","int32", "int32", "object", "object", "object", "object", "object", "int32", "int32"],
+        "Table" : "DIM_DEBT",
+        "Primary_Key" : "DebtID",
+        "Hash_Keys" : ["RepaymentDate", "MaturityDate", "InstrumentType", "Covenants"]
+    },
+	{ "Fileroot": "DIM_FUND",
+        "Action" : "DIM",
+		"Schema": ["FundID", "FundName", "FundIndustry", "RaisedDate", "Value", "FundLocation", "IncludeFlag"],
+        "DataType": ["object","object", "object", "int32", "float64", "object", "int32"],
+        "Table" : "DIM_FUND",
+        "Primary_Key" : "FundID",
+        "Hash_Keys" : ["FundName", "FundIndustry", "RaisedDate", "Value", "FundLocation"]
+    },
+    { "Fileroot": "FACT_BUDGET_TB",
+        "Action" : "BUDGET",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_BUDGET_TB",
+        "Primary_Key" : "",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+	{ "Fileroot": "FACT_BUDGET_TS",
+        "Action" : "BUDGET",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_BUDGET_TS",
+        "Primary_Key" : "",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+    { "Fileroot": "FACT_MA",
+        "Action" : "BUDGET",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_MA",
+        "Primary_Key" : "",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+    { "Fileroot": "FACT_TB",
+        "Action" : "FACT",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_TB",
+        "Primary_Key" : "RecordID",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+    { "Fileroot": "FACT_TS",
+        "Action" : "FACT",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_TS",
+        "Primary_Key" : "RecordID",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+	{ "Fileroot": "FACT_ARR",
+        "Action" : "FACT",
+         "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_ARR",
+        "Primary_Key" : "RecordID",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+		{ "Fileroot": "FACT_PORTCO",
+        "Action" : "FACT",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_PORTCO",
+        "Primary_Key" : "RecordID",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    },
+	{ "Fileroot": "FACT_BUDGET_ARR",
+        "Action" : "BUDGET",
+        "Schema": ["RecordID","RecordType","EntityID","PortcoID","FundID","PortcoFundID","DebtID","CurrencyID","TransactionDate","RevenueRecognitionDate"
+					,"ReportingRegionID","SoldToCustomerID","BillToCustomerID","ShipToCustomerID","DisplayedCustomerID","SiteID","ProductID","BusinessUnitID"
+					,"ProfitCentreID","CostCentreID","ProjectID","MarketID","SalesPersonID","ContractID","DeploymentID","WorkOrderID","GLAccountNumber","DocumentNumber"
+					,"DocumentLine","NonVolumeBasedIncomeFlag","QuantityType","COAID","PLValue","ActualARR","ActualMRR","TotalContractValue","ForecastFlag","IntercompanyFlag"
+					,"ManagementAdjustmentsFlag","ConsolAdjustmentsFlag"],
+        "DataType": ["object","object","object","object","object","object","object","object","object","int32","object","object","object","object","object","object","object"
+					,"object","object","object","object","object","object","object","object","object","object","object","object","object","object","object","float64"
+					,"float64","float64","float64","object","int32","int32","int32"],
+        "Table" : "FACT_BUDGET_ARR",
+        "Primary_Key" : "",
+        "Hash_Keys" : [""],
+        "Key_Fields" : []
+    }
+]
