@@ -13,35 +13,56 @@
         id="inputFile"
         @change="readFile"
         ></v-file-input>
-        <v-data-table
-            :headers = "headers"
-            :items = "items"
-            v-bind:items-per-page= "itemsPerPage"
-            v-bind:page= "page"
-            class="elevation-1"
-            id="table"
-            :key="reRender"
-            @pagination="paginate"
-        >
-            <template v-slot:body="{ items }">
-                <tbody>
-                    <tr v-for="item in items" :key="item.Fileroot">
-                        <td @click="clicked(item, 'Fileroot', false)">{{ item.Fileroot }}</td>
-                        <td @click="clicked(item, 'Action', false)">{{ item.Action }}</td>
-                        <td @click="clicked(item, 'Schema', false)">{{ item.Schema.toString().slice(0,50) }}</td>
-                        <td @click="clicked(item, 'DataType', false)">{{ item.DataType.toString().slice(0,50) }}</td>
-                        <td @click="clicked(item, 'Table', false)">{{ item.Table }}</td>
-                        <td @click="clicked(item, 'Primary_Key', false)">{{ item.Primary_Key }}</td>
-                        <td @click="clicked(item, 'Hash_Keys', false)">{{ item.Hash_Keys.toString().slice(0,50) }}</td>
-                    </tr>
-                </tbody>
-            </template>
-        </v-data-table>
+
+        <v-card>
+            <v-card-title>
+                {{fileName}}
+                <v-spacer></v-spacer>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                    class="searchInput"
+                ></v-text-field>
+                <v-icon class="deleteIcon" :disabled="disableDelete" @click="deleteSelected">mdi-delete</v-icon>
+            </v-card-title>
+            <v-data-table
+                v-model="selected"
+                show-select
+                :headers = "headers"
+                :items = "items"
+                :search="search"
+                v-bind:items-per-page= "itemsPerPage"
+                v-bind:page= "page"
+                class="elevation-1"
+                id="table"
+                :key="reRender"
+                @pagination="paginate"
+            >
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="item in items" :key="item.Fileroot">
+                            <td><v-checkbox :value="item.Fileroot" v-model="selected"></v-checkbox></td>
+                            <td @click="clicked(item, 'Fileroot', false)">{{ item.Fileroot }}</td>
+                            <td @click="clicked(item, 'Action', false)">{{ item.Action }}</td>
+                            <td @click="clicked(item, 'Schema', false)">{{ item.Schema.join(", ").slice(0,item.Schema.join(", ").indexOf(" ", 40)) }}</td>
+                            <td @click="clicked(item, 'DataType', false)">{{ item.DataType.join(", ").slice(0,item.DataType.join(", ").indexOf(" ", 40)) }}</td>
+                            <td @click="clicked(item, 'Table', false)">{{ item.Table }}</td>
+                            <td @click="clicked(item, 'Primary_Key', false)">{{ item.Primary_Key }}</td>
+                            <td @click="clicked(item, 'Hash_Keys', false)">{{ item.Hash_Keys.join(", ").slice(0, item.Hash_Keys.join(", ").concat(" ").slice(0, 40).lastIndexOf(" ")) }}</td>
+                        </tr>
+                    </tbody>
+                </template>
+                
+            </v-data-table>
+        </v-card>
 
         <v-row>
             <v-btn elevation="2" @click="newRecord">Create New Record</v-btn>
             <v-spacer></v-spacer>
-            <v-btn elevation="2">Save as new file</v-btn>
+            <v-btn elevation="2" @click="writeFile">Save as new file</v-btn>
         </v-row>
 
 
@@ -87,12 +108,15 @@
 </template>
 
 <script>
-import filelist from '../assets/filelist.json'
 export default {
     name: 'ReadFileList',
     data: () => ({
         myFile: [],
+        fileName: '',
         reRender: 0,
+        search: '',
+        rules: [],
+        selected: [],
         dialog: false,
         itemsPerPage: 10,
         page: 1,
@@ -114,29 +138,25 @@ export default {
         items: [],
     }),
     computed: {
-        rules () {
-            const rules = []
-            if(this.editAttribute = 'Fileroot') {
-                const rule1 = value => !!value || 'Required.'
-                rules.push(rule1)
-                var fileRoots = []
-                for (var i of this.items) {
-                    fileRoots.push(i['Fileroot'])
-                }
-                const rule2 = value => (this.itemToEdit['Fileroot'] == value) || (fileRoots.indexOf(value) == -1) || 'Duplicate File Root'
-                rules.push(rule2)
+        disableDelete() {
+            if (this.selected.length > 0) {
+                return false
             }
-            return rules
+            else {
+                return true
+            }
         }
     },
     methods: {
         readFile(file) {
             this.asyncReadFile(file).then(result => {
+                this.fileName = file.name
                 var data = JSON.parse(result)
                 this.items = Object.values(data)
                 this.myFile = Object.values(data)
                 console.log(this.myFile)
                 this.forceRenderer()
+                this.page = 1 
             })
             
         },
@@ -148,6 +168,13 @@ export default {
             })
             return result
         },
+        writeFile() {
+            var file = JSON.stringify(this.items, null, "\t")
+            console.log(file)
+            var fileSaver = require('file-saver')
+            var blob = new Blob([file], {type: "application/json"})
+            fileSaver.saveAs(blob, "filelist.json")
+        },
         forceRenderer() {
             this.reRender += 1
         },
@@ -158,10 +185,12 @@ export default {
             this.editAttribute = attribute
             if (this.editAttribute == 'Schema' || this.editAttribute == 'DataType' || this.editAttribute == 'Hash_Keys') {
                 this.showBigInput = true
+                this.editedItem[this.editAttribute] = this.editedItem[this.editAttribute].join(", ")
             }
             else {
                 this.showBigInput = false
             }
+            this.rulesFunc()
             this.dialog = true
         },
         saveAttribute() {
@@ -169,7 +198,7 @@ export default {
                 this.dialog = false
                 if (this.itemToEdit[this.editAttribute] != this.editedItem[this.editAttribute]) {
                     if (this.editAttribute == 'Schema' || this.editAttribute == 'DataType' || this.editAttribute == 'Hash_Keys') {
-                        this.editedItem[this.editAttribute] = (this.editedItem[this.editAttribute]).split(",")
+                        this.editedItem[this.editAttribute] = (this.editedItem[this.editAttribute]).split(", ")
                     }
                 }
                 for (var i of this.items) {
@@ -186,7 +215,12 @@ export default {
         newRecord() {
             var newItem = {}
             for (var header of this.headers) {
-                newItem[header.value] = ''
+                if (header.value == 'Schema' || header.value == 'DataType' || header.value == 'Hash_Keys') {
+                    newItem[header.value] = []
+                }
+                else {
+                    newItem[header.value] = ''
+                }
             }
             this.items.push(newItem)
             this.forceRenderer()
@@ -195,7 +229,6 @@ export default {
             }
             this.page = this.pageCount
             this.clicked(newItem, 'Fileroot', true)
-            
         },
         paginate(val) {
             this.page = val.page
@@ -209,7 +242,32 @@ export default {
             this.items = JSON.parse(JSON.stringify(this.myFile))
             this.forceRenderer()
             this.page = 1
-        }
+        },
+        deleteSelected() {
+            var newItems = []
+            for (var item of this.items) {
+                if (!this.selected.includes(item.Fileroot)) {
+                    newItems.push(item)
+                }
+            }
+            this.items = newItems
+            this.selected = []
+        },
+        rulesFunc() {
+            if(this.editAttribute === "Fileroot") {
+                const rule1 = value => !!value || 'Required.'
+                this.rules.push(rule1)
+                var fileRoots = []
+                for (var i of this.items) {
+                    fileRoots.push(i['Fileroot'])
+                }
+                const rule2 = value => (this.itemToEdit['Fileroot'] == value) || (fileRoots.indexOf(value) == -1) || 'Duplicate File Root'
+                this.rules.push(rule2)
+            }
+            else {
+                this.rules = []
+            }
+        },
     },
     mounted() {
         
@@ -225,4 +283,11 @@ export default {
     .hide {
         display: none!important;
     }
+
+    .deleteIcon {
+        margin-left: 1em;
+        margin-top:16px;
+        font-size: 30px!important;
+    }
+
 </style>
