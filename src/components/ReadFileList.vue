@@ -47,11 +47,11 @@
                             <td><v-checkbox :value="item.Fileroot" v-model="selected"></v-checkbox></td>
                             <td @click="clicked(item, 'Fileroot', false)">{{ item.Fileroot }}</td>
                             <td @click="clicked(item, 'Action', false)">{{ item.Action }}</td>
-                            <td @click="clicked(item, 'Schema', false)">{{ item.Schema.join(", ").slice(0,item.Schema.join(", ").indexOf(" ", 40)) }}</td>
-                            <td @click="clicked(item, 'DataType', false)">{{ item.DataType.join(", ").slice(0,item.DataType.join(", ").indexOf(" ", 40)) }}</td>
+                            <td @click="clicked(item, 'Schema', false)">{{ displayList(item.Schema, 'Schema') }}</td>
+                            <td @click="clicked(item, 'DataType', false)">{{ displayList(item.DataType, 'DataType') }}</td>
                             <td @click="clicked(item, 'Table', false)">{{ item.Table }}</td>
                             <td @click="clicked(item, 'Primary_Key', false)">{{ item.Primary_Key }}</td>
-                            <td @click="clicked(item, 'Hash_Keys', false)">{{ item.Hash_Keys.join(", ").slice(0, item.Hash_Keys.join(", ").concat(" ").slice(0, 40).lastIndexOf(" ")) }}</td>
+                            <td @click="clicked(item, 'Hash_Keys', false)">{{ displayList(item.Hash_Keys, 'Hash_Keys') }}</td>
                         </tr>
                     </tbody>
                 </template>
@@ -66,7 +66,7 @@
         </v-row>
 
 
-        <v-dialog v-model="dialog" width="500" v-bind:persistent="persistentDialog">
+        <v-dialog v-model="dialog" width="500" v-bind:persistent="persistentDialog" ref="myDialog" :key=reRender>
             <v-card>
                 <v-card-title>
                     Edit {{editAttribute}}
@@ -135,6 +135,7 @@ export default {
             { text:'Primary Key', value: 'Primary_Key'},
             { text:'Hash Keys', value: 'Hash_Keys'},
         ],
+        listHeaders: ['Schema', 'DataType', 'Hash_Keys'],
         items: [],
     }),
     computed: {
@@ -145,7 +146,9 @@ export default {
             else {
                 return true
             }
-        }
+        },
+    },
+    watch: {
     },
     methods: {
         readFile(file) {
@@ -154,9 +157,9 @@ export default {
                 var data = JSON.parse(result)
                 this.items = Object.values(data)
                 this.myFile = Object.values(data)
-                console.log(this.myFile)
                 this.forceRenderer()
                 this.page = 1 
+                this.editAttribute = ''
             })
             
         },
@@ -170,7 +173,6 @@ export default {
         },
         writeFile() {
             var file = JSON.stringify(this.items, null, "\t")
-            console.log(file)
             var fileSaver = require('file-saver')
             var blob = new Blob([file], {type: "application/json"})
             fileSaver.saveAs(blob, "filelist.json")
@@ -178,12 +180,21 @@ export default {
         forceRenderer() {
             this.reRender += 1
         },
+        displayList(listToDisplay, attribute) {
+            if(attribute === 'Hash_Keys') {
+                listToDisplay = listToDisplay.join(", ").slice(0, listToDisplay.join(", ").concat(" ").slice(0, 40).lastIndexOf(" "))
+            }
+            else {
+                listToDisplay = listToDisplay.join(", ").slice(0,listToDisplay.join(", ").indexOf(" ", 40))
+            }
+            return listToDisplay
+        },
         clicked(item, attribute, persistent) {
             this.persistentDialog = persistent
             this.itemToEdit = item
             this.editedItem = Object.assign({}, this.itemToEdit)
             this.editAttribute = attribute
-            if (this.editAttribute == 'Schema' || this.editAttribute == 'DataType' || this.editAttribute == 'Hash_Keys') {
+            if (this.listHeaders.includes(this.editAttribute)) {
                 this.showBigInput = true
                 this.editedItem[this.editAttribute] = this.editedItem[this.editAttribute].join(", ")
             }
@@ -197,7 +208,7 @@ export default {
             if (this.$refs.form.validate()) {
                 this.dialog = false
                 if (this.itemToEdit[this.editAttribute] != this.editedItem[this.editAttribute]) {
-                    if (this.editAttribute == 'Schema' || this.editAttribute == 'DataType' || this.editAttribute == 'Hash_Keys') {
+                    if (this.listHeaders.includes(this.editAttribute)) {
                         this.editedItem[this.editAttribute] = (this.editedItem[this.editAttribute]).split(", ")
                     }
                 }
@@ -215,7 +226,7 @@ export default {
         newRecord() {
             var newItem = {}
             for (var header of this.headers) {
-                if (header.value == 'Schema' || header.value == 'DataType' || header.value == 'Hash_Keys') {
+                if (this.listHeaders.includes(header.value)) {
                     newItem[header.value] = []
                 }
                 else {
@@ -289,5 +300,7 @@ export default {
         margin-top:16px;
         font-size: 30px!important;
     }
-
+    .container {
+        margin-top: 64px!important;
+    }
 </style>

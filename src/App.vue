@@ -5,30 +5,26 @@
       color="primary"
       dark
     >
-      <div class="d-flex align-center">
-        
-      </div>
-
       <v-spacer></v-spacer>
-      
+      <v-btn text><router-link to="/">File List Editor</router-link></v-btn>
+      <v-btn text><router-link to="/control-pipelines">Control Pipelines Editor</router-link></v-btn>
     </v-app-bar>
-
+    <router-view></router-view>
     <v-main>
-      <ReadFileList/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 import ReadFileList from './components/ReadFileList';
+import ControlPipelines from './components/ControlPipelines';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
-    ReadFileList
+    ReadFileList,
+    ControlPipelines
   },
 
   data: () => ({
@@ -36,3 +32,13 @@ export default {
   }),
 };
 </script>
+
+<style scoped>
+a {
+  color: white!important;
+  text-decoration: none;
+}
+.v-btn {
+  background: none;
+}
+</style>
