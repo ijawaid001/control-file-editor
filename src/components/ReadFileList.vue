@@ -181,11 +181,14 @@ export default {
             this.reRender += 1
         },
         displayList(listToDisplay, attribute) {
-            if(attribute === 'Hash_Keys') {
-                listToDisplay = listToDisplay.join(", ").slice(0, listToDisplay.join(", ").concat(" ").slice(0, 40).lastIndexOf(" "))
-            }
-            else {
-                listToDisplay = listToDisplay.join(", ").slice(0,listToDisplay.join(", ").indexOf(" ", 40))
+            listToDisplay = listToDisplay.join(", ")
+            if (listToDisplay.length > 40) {
+                if(attribute === 'Hash_Keys') {
+                    listToDisplay = listToDisplay.slice(0, listToDisplay.concat(" ").slice(0, 40).lastIndexOf(" ")).concat(" ...")
+                }
+                else {
+                    listToDisplay = listToDisplay.slice(0,listToDisplay.indexOf(" ", 40)).concat(" ...")
+                }
             }
             return listToDisplay
         },

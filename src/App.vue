@@ -5,6 +5,7 @@
       color="primary"
       dark
     >
+      <v-toolbar-title>Accelerated Insight Control File Editor</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text><router-link to="/">File List Editor</router-link></v-btn>
       <v-btn text><router-link to="/control-pipelines">Control Pipelines Editor</router-link></v-btn>
