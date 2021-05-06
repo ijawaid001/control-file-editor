@@ -37,12 +37,12 @@
                     <tbody>
                         <tr v-for="item in items" :key="item.PortcoID">
                             <td><v-checkbox :value="item.PortcoID" v-model="selected"></v-checkbox></td>
-                            <td @click="clicked(item, 'PortcoID', false)">{{ item.PortcoID }}</td>
-                            <td @click="clicked(item, 'SFTPDirectory', false)">{{ item.SFTPDirectory }}</td>
-                            <td @click="clicked(item, 'PortcoPipeline', false)">{{ displayList(item.PortcoPipeline) }}</td>
-                            <td @click="clicked(item, 'PreStoredProcedures', false)">{{ displayList(item.PreStoredProcedures) }}</td>
-                            <td @click="clicked(item, 'PostStoredProcedures', false)">{{ displayList(item.PostStoredProcedures) }}</td>
-                            <td @click="clicked(item, 'ExpectedFiles', false)">Click here to edit</td>
+                            <td @click="clicked(item, 'PortcoID', false, false)">{{ item.PortcoID }}</td>
+                            <td @click="clicked(item, 'SFTPDirectory', false, false)">{{ item.SFTPDirectory }}</td>
+                            <td @click="clicked(item, 'PortcoPipeline', false, false)">{{ displayList(item.PortcoPipeline) }}</td>
+                            <td @click="clicked(item, 'PreStoredProcedures', false, false)">{{ displayList(item.PreStoredProcedures) }}</td>
+                            <td @click="clicked(item, 'PostStoredProcedures', false, false)">{{ displayList(item.PostStoredProcedures) }}</td>
+                            <td @click="clicked(item, 'ExpectedFiles', false, false)">Click here to edit</td>
                         </tr>
                     </tbody>
                 </template>
@@ -198,28 +198,34 @@ export default {
             }
             return listToDisplay
         }, 
-        clicked(item, attribute, persistent) {
-            this.persistentDialog = persistent
-            this.itemToEdit = item
-            this.editedItem = Object.assign({}, this.itemToEdit)
-            this.editAttribute = attribute
-            if(this.editAttribute === 'ExpectedFiles') {
-                if (this.$refs.expectedFilesVue) {
-                    this.$refs.expectedFilesVue.changePortcoToEdit(this.itemToEdit)
+        clicked(item, attribute, persistent, newRecord) {
+            if (!attribute === 'PortcoID' || newRecord) {
+                this.persistentDialog = persistent
+                this.itemToEdit = item
+                this.editedItem = Object.assign({}, this.itemToEdit)
+                this.editAttribute = attribute
+                if(this.editAttribute === 'ExpectedFiles') {
+                    if (this.$refs.expectedFilesVue) {
+                        this.$refs.expectedFilesVue.changePortcoToEdit(this.itemToEdit)
+                    }
+                    else {
+                        this.showExpectedFiles = true
+                    }
+                    return
+                }
+                if (this.listHeaders.includes(this.editAttribute)) {
+                    this.showBigInput = true
                 }
                 else {
-                    this.showExpectedFiles = true
+                    this.showBigInput = false
                 }
-                return
-            }
-            if (this.listHeaders.includes(this.editAttribute)) {
-                this.showBigInput = true
+                this.rulesFunc()
+                this.dialog = true
             }
             else {
-                this.showBigInput = false
+                alert("You cannot change the PortcoID")
             }
-            this.rulesFunc()
-            this.dialog = true
+            
         },
         saveAttribute() {
             if (this.$refs.form.validate()) {
@@ -247,7 +253,7 @@ export default {
                 this.pageCount += 1
             }
             this.page = this.pageCount
-            this.clicked(newItem, 'PortcoID', true)
+            this.clicked(newItem, 'PortcoID', true, true)
         },
         paginate(val) {
             this.page = val.page
