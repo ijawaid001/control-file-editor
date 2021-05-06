@@ -26,11 +26,10 @@
                     hide-details
                     class="searchInput"
                 ></v-text-field>
-                <v-icon class="deleteIcon" :disabled="disableDelete" @click="deleteSelected">mdi-delete</v-icon>
+                <!-- <v-icon class="deleteIcon" :disabled="disableDelete" @click="deleteSelected">mdi-delete</v-icon> -->
             </v-card-title>
             <v-data-table
                 v-model="selected"
-                show-select
                 :headers = "headers"
                 :items = "items"
                 :search="search"
@@ -44,7 +43,7 @@
                 <template v-slot:body="{ items }">
                     <tbody>
                         <tr v-for="item in items" :key="item.Fileroot">
-                            <td><v-checkbox :value="item.Fileroot" v-model="selected"></v-checkbox></td>
+                            <!-- <td><v-checkbox :value="item.Fileroot" v-model="selected"></v-checkbox></td> -->
                             <td @click="clicked(item, 'Fileroot', false)">{{ item.Fileroot }}</td>
                             <td @click="clicked(item, 'Action', false)">{{ item.Action }}</td>
                             <td @click="clicked(item, 'Schema', false)">{{ displayList(item.Schema, 'Schema') }}</td>
@@ -60,7 +59,7 @@
         </v-card>
 
         <v-row>
-            <v-btn elevation="2" @click="newRecord">Create New Record</v-btn>
+            <!-- <v-btn elevation="2" @click="newRecord">Create New Record</v-btn> -->
             <v-spacer></v-spacer>
             <v-btn elevation="2" @click="writeFile">Save as new file</v-btn>
         </v-row>
