@@ -199,7 +199,7 @@ export default {
             return listToDisplay
         }, 
         clicked(item, attribute, persistent, newRecord) {
-            if (!attribute === 'PortcoID' || newRecord) {
+            if (attribute !== 'PortcoID' || newRecord) {
                 this.persistentDialog = persistent
                 this.itemToEdit = item
                 this.editedItem = Object.assign({}, this.itemToEdit)
